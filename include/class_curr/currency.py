@@ -19,7 +19,6 @@ class Currc:
 
         # now time to organize the information into
 
-        #print(current[9])
         #################################### saving country names ######################################################
         tempstr = current[1]
         tempstr = tempstr[14:] + ","    # adds a comma to end of string so that last country will be considered
@@ -40,9 +39,6 @@ class Currc:
                 i += 4  # skip over the usless 4 characters in csv data
                 previnc = i # previous index becomes where the current I is
             i += 1
-
-        print(self.countrynames)
-        # print("\n\n\n")
 
         ############################## saving country currency name ####################################################
 
@@ -66,9 +62,6 @@ class Currc:
                 previnc = i # previous index becomes where the current I is
             i += 1
 
-        print(self.countryCurr)
-        # print("\n\n\n")
-
         ####################################### saves the date of currencies from 365 days ago(year) and gets their exchange rate ###################
         currlen = len(current) - 1
         commaYet = False
@@ -76,7 +69,6 @@ class Currc:
         previnc2 = 0
         templist = []
         for i in range(currlen,currlen - 365,-1):   # goes from latest record to a year ago
-
             commaYet = False
             # need to determine how long the date is
             currdate = ""
@@ -87,49 +79,62 @@ class Currc:
                     commaYet = True
                 currdate += current[i][y]   # concatonate current value onto the current date
                 y += 1
-            #print(currdate)
             self.recentExch.append(currdate) # append each date onto list of recent dates
 
             #### This is for exchange rates, do the same with the commas and store in a list
             templen = len(current[i]) - 1   # gets current length of current str
             for x in range(templen):    # loops through range of current str
-                if current[i][x] == ',':
+                current[i] = current[i] + "\n"
+                if current[i][x] == ',' or x == templen - 1:
                     newstr = ""
-                    z = previnc2 + 1
+                    z = previnc2
                     while(z < x):
                         newstr += current[i][z]
                         z += 1
                     if z != 0 and i != 0:
                        templist.append(newstr)
-                    previnc2 = x
+                    previnc2 = x + 1
             self.countryexch.append(templist[:])  # appends a copy deep of the inner test list to testlist so that intestlist can be cleared
             templist.clear()
+            previnc2 = 0;
             i += 1
-
-        # print(self.countryexch)     #gives each year of data for each currency's exchange rate
-        # print("\n\n\n")
 
     def find_exchange_rates(self, country1, country2, date, value):    # this function finds the exchange rates in terms of country1 & country2, and the date
 
         # first find the dates that we would like to use the exchange rates
-        # just loop through the recentExch list untill finding matching date, then take index value
+        # just loop through the recentExch list until finding matching date, then take index value
         for i, val in enumerate(self.recentExch):
             if date == val:
                 break
 
         ctryExch = self.countryexch[i]  # this gets the exact list at the correct date
 
+        print(self.recentExch)
+        print(ctryExch)
+
         Country1Iter = 0
         Country2Iter = 0
         for i, val in enumerate(self.countryCurr):  # sets the location for in the list where the related exchange rate is held
-            if country1 == val:
-                Country1Iter = i
+            if country1 == val: # We are adding one because the layout of the list ctryExch includes the date as the first index. Add 1 to offset this
+                Country1Iter = i + 1
+                if country2 == val:
+                    Country2Iter = Country1Iter
             elif country2 == val:
-                Country2Iter = i
+                Country2Iter = i + 1
+                if country1 == val:
+                    Country1Iter = Country2Iter
 
-        # next will create a current_Currc object that will be created and destroyed upon the finding of the exchange rates
-        curr_curr = current_Currc(ctryExch, date, country1, country2, Country1Iter, Country2Iter)
-        print(f'There are {curr_curr.conversion(value)} {self.country2} in {self.country1}')
+
+        # need to determine if the exchange rate can even be calulated. If values for country is '' or 'NaN', then the exchange rate could not be found
+
+        if (ctryExch[Country1Iter] == '' or ctryExch[Country1Iter] == 'NaN'):
+            print(f"There is not a valid entry for {country1}")
+        elif (ctryExch[Country2Iter] == '' or ctryExch[Country2Iter] == 'NaN'):
+            print(f"There is not a valid entry for {country2}")
+        else:
+            # next will create a current_Currc object that will be created and destroyed upon the finding of the exchange rates
+            curr_curr = current_Currc(ctryExch, date, country1, country2, Country1Iter, Country2Iter)
+            print(f'There are {curr_curr.conversion(value)} {country2} in {country1}')
 
 
 
@@ -148,11 +153,8 @@ class current_Currc:    # this class will be called for temporary exchange rate 
         exchangerate1 = self.ctryExch[self.Country1Iter]
         exchangerate2 = self.ctryExch[self.Country2Iter]
 
-        ## find the exchnage rate by dividing first given countries exchange rate in terms of USD and divide wanted
+        # find the exchnage rate by dividing first given countries exchange rate in terms of USD and divide wanted
         # countries currency
-
-        print(float(exchangerate2))
-        print(exchangerate1)
         currExchRate = float(exchangerate2) / float(exchangerate1)   # this is exchange rate of how much of the first currency it would take to get second currency
 
         # to convert current money to new currency (currecurrency * (wantedcurrency/currcurrency))
