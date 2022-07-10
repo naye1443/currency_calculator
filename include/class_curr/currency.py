@@ -109,9 +109,6 @@ class Currc:
 
         ctryExch = self.countryexch[i]  # this gets the exact list at the correct date
 
-        print(self.recentExch)
-        print(ctryExch)
-
         Country1Iter = 0
         Country2Iter = 0
         for i, val in enumerate(self.countryCurr):  # sets the location for in the list where the related exchange rate is held
