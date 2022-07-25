@@ -32,7 +32,9 @@ def main():
         print('#################################')
 
         date = input(f"You can find the exchange rate on any day from today to last year, this is from {current.recentExch[len(current.recentExch) - 1]} to {current.recentExch[0]}. please add day that you would like to see the exchange rate in M/DD/YYYY.(ex.3/10/2022):")
-        #if( date < )
+        time_valid(current.recentExch[len(current.recentExch) - 1], current.recentExch[0], date)
+
+        # if(date < )
 
         print('###################################################################################################')
         current.country1 = input("Please enter the 3 character currency abbreviation for the money that the currency is in:")
@@ -47,8 +49,13 @@ def main():
 # this function takes the time that the user has answered and converts it into datetime class. Then compared to determine correct range of dates entered
 def time_valid(lowertime, uppertime, usertime):
 
+    val = []
     # convert time string into datetime format
-    timeTodatetime(usertime)
+    val.append(timeTodatetime(usertime))
+    val.append(timeTodatetime(lowertime))
+    val.append(timeTodatetime(uppertime))
+    return val
+
 
 def timeTodatetime(time):
 
@@ -84,6 +91,16 @@ def timeTodatetime(time):
                 x += 1
             tempstr.strip("/")  # strip any spaces that were in the year
             year = tempstr
+
+    tempdate = date.today()
+    tempDate + ""
+    for i in range(2):
+        tempDate = tempDate + tempdate[i]
+
+    year
+
+    if len(year) == 2:
+        year
 
     print(f"day:{day}\tmonth:{month}\tyear:{year}")
 
