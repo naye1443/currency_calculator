@@ -21,7 +21,9 @@ def main():
     time_valid(current.recentExch[len(current.recentExch) - 1], current.recentExch[0], '5/20/2022')
 
     continloop = True
+    contminloop = True
     while(continloop):
+        contminloop = True
 
         print('These are the corresponding currencies with the country names:')
 
@@ -41,7 +43,22 @@ def main():
         print('###################################################################################################')
         current.country2 = input("please enter the 3 character for the currency abbreviation that the money should be converted to:")
         print('###################################################################################################')
-        current.find_exchange_rates(current.country1, current.country2, date, amount)
+        current.find_exchange_rates(current.country1, current.country2, date, amount)   # prints the currency of country 1 in terms of country 2
+
+        while contminloop:
+            print('###################################################################################################')
+            yesOrNo = input("would you like to do another conversion(Y/N):");
+            if yesOrNo == 'y' or yesOrNo == 'Y':
+                continloop = True
+                contminloop = False
+            elif yesOrNo == 'n' or yesOrNo == 'N':
+                continloop = False
+                contminloop = False
+            else:
+                print('###################################################################################################')
+                print("This is not a valid input, please try again")
+                contminloop = True
+
 
 
 # this function takes the time that the user has answered and converts it into datetime class. Then compared to determine correct range of dates entered
@@ -92,3 +109,4 @@ def timeTodatetime(time):
 
 
 main()
+# wanna use wxPython for my gui
