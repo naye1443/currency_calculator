@@ -36,7 +36,6 @@ def main():
         date = input(f"You can find the exchange rate on any day from today to last year, this is from {current.recentExch[len(current.recentExch) - 1]} to {current.recentExch[0]}. please add day that you would like to see the exchange rate in M/DD/YYYY.(ex.3/10/2022):")
         time_valid(current.recentExch[len(current.recentExch) - 1], current.recentExch[0], date)
 
-        # if(date < )
 
         print('###################################################################################################')
         current.country1 = input("Please enter the 3 character currency abbreviation for the money that the currency is in:")
